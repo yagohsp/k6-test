@@ -3,7 +3,7 @@
 ## Requirements
 
 - [Docker](https://www.docker.com/get-started)
-- [k6](https://k6.io/docs/getting-started/installation/)
+- [k6](https://k6.io/)
 
 ## How to Run
 
