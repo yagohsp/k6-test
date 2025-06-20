@@ -7,15 +7,27 @@ export let options = {
   duration: "5s",
 };
 
+function letterUUID(length = 32) {
+  const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let uuid = "";
+  for (let i = 0; i < length; i++) {
+    uuid += letters.charAt(Math.floor(Math.random() * letters.length));
+  }
+  return uuid;
+}
+
 export default function () {
   const payload = JSON.stringify({
-    nome: `Pessoa ${uuidv4()}`,
-    email: `teste-${Math.random().toString(36).substring(7)}@email.com`,
-    idade: Math.floor(Math.random() * 60) + 18,
+    nome: `Pessoa`,
+    apelido: `Apelido ${letterUUID(16)}`,
+    nascimento: "2000-04-09",
+    stack: ["C", "C#"],
   });
 
   const headers = { "Content-Type": "application/json" };
-  const res = http.post("http://localhost:80", payload, { headers });
+  const res = http.post("http://localhost:9999/programadores", payload, {
+    headers,
+  });
 
   check(res, {
     "status é 201 (Created)": (r) => r.status === 201,

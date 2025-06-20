@@ -23,26 +23,28 @@ struct AppState {
 #[post("/programadores")]
 async fn create_user(data: web::Data<AppState>, user: web::Json<Programador>) -> impl Responder {
     let collection = &data.user_collection;
-    let validation = Regex::new(r"^[a-zA-Z]+$").unwrap();
+    let validation = Regex::new(r"^[a-zA-Z\s]+$").unwrap();
 
-    if !validation.is_match(user.nome.trim()) {
+    let nome = user.nome.trim();
+    if nome.is_empty() || !validation.is_match(nome) {
         return HttpResponse::UnprocessableEntity()
             .body("Nome não pode ter valores vazios ou caracteres especiais ou numeros");
     }
-    if !validation.is_match(user.apelido.trim()) {
+
+    let apelido = user.apelido.trim();
+    if apelido.is_empty() || !validation.is_match(apelido) {
         return HttpResponse::UnprocessableEntity()
             .body("Apelido não pode ter valores vazios ou caracteres especiais ou numeros");
     }
 
     let date_regex = Regex::new(r"^\d{4}-\d{2}-\d{2}$").unwrap();
-    if !date_regex.is_match(&user.nascimento) {
+    if user.nascimento.is_empty() || !date_regex.is_match(&user.nascimento) {
         return HttpResponse::BadRequest().body("Nascimento deve estar no formato AAAA-MM-DD.");
     }
 
     if let Some(stack) = &user.stack {
-        if stack.iter().any(|s| !validation.is_match(s)) {
-            return HttpResponse::BadRequest()
-                .body("Stack não pode ter valores vazios ou caracteres especiais ou numeros");
+        if stack.iter().any(|s| s.trim().is_empty()) {
+            return HttpResponse::BadRequest().body("Stack não pode ter valores vazios");
         }
     }
 
