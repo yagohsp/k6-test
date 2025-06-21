@@ -23,8 +23,8 @@ struct AppState {
 #[post("/programadores")]
 async fn create_user(data: web::Data<AppState>, user: web::Json<Programador>) -> impl Responder {
     let collection = &data.user_collection;
-    let validation = Regex::new(r"^[a-zA-Z\s]+$").unwrap();
 
+    let validation = Regex::new(r"^[\p{L}\s]+$").unwrap();
     let nome = user.nome.trim();
     if nome.is_empty() || !validation.is_match(nome) {
         return HttpResponse::UnprocessableEntity()
@@ -32,9 +32,9 @@ async fn create_user(data: web::Data<AppState>, user: web::Json<Programador>) ->
     }
 
     let apelido = user.apelido.trim();
-    if apelido.is_empty() || !validation.is_match(apelido) {
+    if apelido.is_empty()  {
         return HttpResponse::UnprocessableEntity()
-            .body("Apelido não pode ter valores vazios ou caracteres especiais ou numeros");
+            .body("Apelido não pode estar vazio");
     }
 
     let date_regex = Regex::new(r"^\d{4}-\d{2}-\d{2}$").unwrap();

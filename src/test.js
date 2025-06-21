@@ -16,7 +16,7 @@ function letterUUID(length = 32) {
   return uuid;
 }
 
-export default function () {
+export default function() {
   const payload = JSON.stringify({
     nome: `Pessoa`,
     apelido: `Apelido ${letterUUID(16)}`,
